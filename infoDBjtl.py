@@ -4,7 +4,7 @@ import json
 # PostgreSQL database connection parameters
 db_params = {
     'host': 'localhost',
-    'database': '**',
+    'database': 'eazybusiness2',
     'user': 'postgres',
     'password': '**'
 }
