@@ -14,6 +14,8 @@ dest_user = "postgres"
 dest_password = "**"
 dest_host = "localhost"
 dest_port = "5432"
+
+
 # Connect to the source PostgreSQL database
 try:
     source_connection = psycopg2.connect(
@@ -30,12 +32,13 @@ except psycopg2.Error as e:
 # Create a cursor object for the source database
 source_cursor = source_connection.cursor()
 
-# Define the SQL query to fetch column names, table names, and schema names
+# Define the SQL query to fetch column information
 source_query = sql.SQL("""
     SELECT
-        column_name,
         table_name,
-        table_schema
+        column_name,
+        table_schema,
+        data_type
     FROM information_schema.columns
     ORDER BY table_schema, table_name, ordinal_position
 """)
@@ -68,21 +71,20 @@ except psycopg2.Error as e:
 # Create a cursor object for the destination database
 dest_cursor = dest_connection.cursor()
 
-# Define the SQL query to insert data into the Info_Tab table
+# Define the SQL query to insert data into the Info_columnTable table
 insert_query = sql.SQL("""
-    INSERT INTO info_column (id, column_name, table_name, schema_name)
-    VALUES (%s, %s, %s, %s)
+    INSERT INTO info_column (id, column_name, table_name, schema_name, column_type)
+    VALUES (%s, %s, %s, %s, %s)
 """)
 
-# Insert the retrieved column information into the Info_Tab table in the destination database
+# Insert the retrieved column information into the Info_columnTable table
 for idx, column in enumerate(columns_info, start=1):
-    data_to_insert = (idx, column[0], column[1], column[2])
+    data_to_insert = (idx, column[1], column[0], column[2], column[3])
     dest_cursor.execute(insert_query, data_to_insert)
 
 # Commit the changes to the destination database
 dest_connection.commit()
 print("done")
-
 # Close the cursors and database connections
 source_cursor.close()
 source_connection.close()
