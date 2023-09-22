@@ -4,13 +4,12 @@ import json
 # PostgreSQL database connection parameters
 db_params = {
        'host': 'localhost',
-    'database': 'eazybusiness2',
+    'database': 'eazybusiness',
     'user': 'postgres',
-    'password': '**'
+    'password': 'quen7890'
 }
 
 # Specify the absolute path to the output JSON file
-output_file_path = 'T:\Project\JTL/jtldb.json'
 
 # Connect to the PostgreSQL database
 try:
@@ -49,6 +48,9 @@ for row in rows:
 json_result = json.dumps(result, indent=2)
 
 # Write the JSON content to the output file
+output_file_path = 'C:\\Users\\Tuan\\Project\\JTL\\jtldb.json'
+
+
 with open(output_file_path, 'w') as output_file:
     output_file.write(json_result)
 
